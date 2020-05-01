@@ -1,0 +1,66 @@
+DIM=15
+l=["_"]*DIM
+M=[l]*DIM
+
+def readN(d):
+    columnNums=readNums(d,"Coluna")
+    lineNums=readNums(d,"Linha")
+    return (lineNums, columnNums)
+
+#N=readN(DIM)
+
+def solve1st(M,N):
+    L,C=N
+    DIM=15
+    l=["_"]*DIM
+    if len(L)!=len(M) or len(C)!=len(M): return False
+    else:
+        s=len(M)
+        for i in range(s):
+            nums=[int(ns) for ns in L[i]]
+            M[i]=intersectP(fill1st(nums,s))
+        for j in range(s):
+            nums=[int(ns) for ns in C[j]]
+            c=intersectP(fill1st(nums,s))
+            for k in range(s):
+                if M[k][j]=="_": M[k][j]=c[k]
+        return M
+
+def readNums(d,label):
+    Ns=[] # numbers matrix
+    for i in range(d):
+        Ns.append(raw_input("{} {}: ".format(label,i+1)).split(","))
+    return Ns
+
+def intersect(s1,s2):
+    if len(s1)!=len(s2): return False
+    else:
+        s=len(s1)
+
+        sr=[""]*s
+        for i in range(s):
+            if s1[i]==s2[i]:
+                sr[i]=s1[i]
+            else:
+                sr[i]="_"
+        return sr
+
+def intersectP(s):
+    return intersect(s,s[::-1])
+
+def fill1st(n,s):
+    if s<sum(n)+len(n)-1: return False
+    else:
+        lr=["_"]*s
+        i=0
+        for num in n:
+            for j in range(num):
+                lr[i]="O"
+                i+=1
+            if i<s:
+                lr[i]="X"
+                i+=1
+        return lr
+
+def imprime(matriz):
+    for li in matriz: print(" ".join(li))

@@ -1,0 +1,81 @@
+def encode(s):
+    if len(s)>1:
+        return [code(c) for c in s]
+    else:
+        t=["X","_","O"]
+        return t.index(s)-1
+
+def decode(n):
+    try:
+        len(n)
+        return [decode(c) for c in n]
+    except:
+        t=["X","_","O"]
+        return t[n+1]
+
+def cross(n1,n2):
+    try:
+        len(n1)
+        return [cross(c1,c2) for c1,c2 in zip(n1,n2)]
+    except:
+        truthTable=[ [-1,-1,0], [-1,-1,0], [0,0,1] ]
+        return truthTable[n1+1][n2+1]
+
+def findIntersec(SEQ_P):
+    def cross(n1,n2):
+        try:
+            len(n1)
+            return [cross(c1,c2) for c1,c2 in zip(n1,n2)]
+        except:
+            truthTable=[ [-1,0,0], [0,0,0], [0,0,1] ]
+            return truthTable[n1+1][n2+1]
+    seq_f=SEQ_P[0]        
+    for seq in SEQ_P: seq_f=cross(seq_f,seq)        
+    return seq_f
+
+def minlen(nums):
+    return sum(nums)+len(nums)-1
+
+def generate(previous,nums,size,maxs):
+    minl=minlen(nums)
+    n=nums[0]
+    seq_p=[]
+    #print("Report stats:\nminl: {}\nnums: {}\nsize: {}\n".format(minl,nums,size) )   
+    if len(nums)>1:
+        rest=nums[1:]
+        for i in range(size-minl+1):
+            seq=previous+[-1]*i+[1]*n+[-1]
+            seq_p.extend( generate(seq,rest,maxs-len(seq),maxs) )
+        return seq_p
+    else:
+        for i in range(size-n+1):
+            seq=previous+[-1]*i+[1]*n
+            if len(seq)<maxs: seq+=[-1]*(maxs-len(seq))
+            seq_p.append(seq)
+        return seq_p
+
+
+#generate([],[3,2,1,1],15,15)
+
+def isPossible(master,seq):
+    if len(master)!=len(seq): return False
+    else:
+        possible=True
+        truthTable=[ [1,1,0], [0,1,0], [0,1,1] ]
+        for i in range(len(seq)):
+            possible&=truthTable[seq[i]+1][master[i]+1]
+        return possible
+
+def findPossibles(master, SEQS):
+        def isPossible(master,seq):
+            if len(master)!=len(seq): return False
+            else:
+                possible=True
+                truthTable=[ [1,1,0], [0,1,0], [0,1,1] ]
+                for i in range(len(seq)):
+                    possible&=truthTable[seq[i]+1][master[i]+1]
+                return possible
+        SEQ_P=[]
+        for s in SEQS:
+            if isPossible(master,s): SEQ_P.append(s)
+        return SEQ_P
